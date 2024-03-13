@@ -6,51 +6,48 @@ variable "region_name" {
   description = "this is the default region"
 }
 
-# variable "counter" {
-#   description = "simple-counter"
-#   default     = 0
 
-# }
-# variable "image" {
-#   description = "default ubuntu image"
-# }
-
-# variable "machine_type" {
-#   description = "this is the default machine type"
-# }
-
-# variable "flask_port" {
-#   description = "this is the default python flask port number"
-# }
-
-# variable "default_zone" {
-#   description = "this is the default zone for us-east4 || us-east4-a"
-# }
-
-variable "instances" {
-  description = "List of instances to create"
-  type = list(object({
-    count        = number
-    name         = string
-    machine_type = string
-    disk_size    = number
-    # flask_port   = number
-    default_zone = string
-    image        = string
-  }))
-}
-
-
-
-# variable "instances" {
-#   description = "List of instances to create"
-#   type = list(object({
-#     count        = number
-#     name         = string
+# variable "vm" {
+#   description = "Map of VM configurations"
+#   type = map(object({
+#     name_prefix  = string
+#     tags         = list(string)
+#     source_image = string
+#     disk_size_gb = number
 #     machine_type = string
-#     disk_size    = number
-#     flask_port   = number
+#     labels       = map(string)
+#     count        = number
 #     default_zone = string
-#     image        = string
+#     email        = string
+#     additional_disks = optional(object({
+#       disk_name    = string
+#       device_name  = string
+#       disk_size_gb = number
+#       disk_type    = string
+#     }))
 #   }))
 # }
+
+
+variable "vm" {
+  description = "Map of VM configurations"
+  type = map(object({
+    tags   = list(string)
+    labels = map(string)
+    email  = string
+    Instnace = object({
+      source_image = string
+      name_prefix  = string
+      count        = number
+      default_zone = string
+      disk_size_gb = number
+      machine_type = string
+      additional_disks = optional(object({
+        disk_name    = string
+        device_name  = string
+        disk_size_gb = number
+        disk_type    = string
+      }))
+    })
+  }))
+}

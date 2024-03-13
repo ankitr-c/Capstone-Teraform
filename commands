@@ -1,0 +1,2 @@
+
+yq --prettyPrint config.yaml -o=json > terraform.tfvars.json

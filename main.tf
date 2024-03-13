@@ -155,11 +155,11 @@ module "instance_template" {
   for_each     = var.vm
   region       = var.region_name
   project_id   = var.project_id
-  name_prefix  = each.value.Instnace.name_prefix
+  name_prefix  = each.value.name_prefix
   tags         = each.value.tags
-  source_image = each.value.Instnace.source_image
-  disk_size_gb = each.value.Instnace.disk_size_gb
-  machine_type = each.value.Instnace.machine_type
+  source_image = each.value.source_image
+  disk_size_gb = each.value.disk_size_gb
+  machine_type = each.value.machine_type
   network      = "default"
   labels       = merge(each.value.labels)
 
@@ -168,12 +168,12 @@ module "instance_template" {
     email  = each.value.email
     scopes = ["cloud-platform"]
   }
-  additional_disks = each.value.Instnace.additional_disks != null ? [
+  additional_disks = each.value.additional_disks != null ? [
     {
-      disk_name    = each.value.Instnace.additional_disks.disk_name
-      device_name  = each.value.Instnace.additional_disks.device_name
-      disk_size_gb = each.value.Instnace.additional_disks.disk_size_gb
-      disk_type    = each.value.Instnace.additional_disks.disk_type
+      disk_name    = each.value.additional_disks.disk_name
+      device_name  = each.value.additional_disks.device_name
+      disk_size_gb = each.value.additional_disks.disk_size_gb
+      disk_type    = each.value.additional_disks.disk_type
       auto_delete  = true
       boot         = false
       disk_labels  = {}
@@ -181,78 +181,43 @@ module "instance_template" {
   ] : []
 }
 
-# locals {
-#   template_names = {
-#     for idx, instance_config in var.vm : var.vm[idx].Instnace.name_prefix => {
-#       name = module.instance_template[idx].self_link
-#     }
-#   }
-# }
+# name_prefix  = var.vm[each.key].name_prefix
+# tags         = var.vm[each.key].tags
+# source_image = var.vm[each.key].source_image
+# disk_size_gb = var.vm[each.key].disk_size_gb
+# machine_type = var.vm[each.key].machine_type
 
-
-# locals {
-#   exploded_vm = merge([
-#     for instance_name, instance_config in var.vm : {
-#       for i in range(instance_config.Instnace.count) : "${instance_name}-${i + 1}" => {
-#         template_name = instance_name
-#       }
-#     }
-#   ]...)
-# }
-
-
-# module "compute_instance" {
-#   source            = "terraform-google-modules/vm/google//modules/compute_instance"
-#   version           = "11.0.0"
-#   for_each          = local.exploded_vm
-#   region            = var.region_name
-#   hostname          = each.key #each.value.machine_name 
-#   instance_template = tostring(local.template_names[var.vm[each.value.template_name].Instnace.name_prefix].name)
-#   # instance_template   = tostring(each.value.template_name)
-#   deletion_protection = false
-#   network             = "default"
-
-# }
-# hostname            = each.key
-
-# module "compute_instance" {
-#   source  = "terraform-google-modules/vm/google//modules/compute_instance"
-#   version = "11.0.0"
-#   for_each = {
-#     for instance_name, instance_config in var.vm : "${instance_name}" => instance_config
-#   }
-#   region              = var.region_name
-#   hostname            = each.key
-#   instance_template   = tostring(local.template_names[each.value.Instnace.name_prefix].name)
-#   deletion_protection = false
-#   network             = "default"
-# }
-
-# locals {
-#   template_names = {
-#     for idx, instance_config in var.vm : var.vm[idx].Instnace.name_prefix => {
-#       name = module.instance_template[idx].self_link
-#     }
-#   }
-# }
-
-module "compute_instance" {
-  source  = "terraform-google-modules/vm/google//modules/compute_instance"
-  version = "11.0.0"
-
-  for_each = {
-    for server_name, server_config in var.vm :
-    "${server_name}-${count.index}" => {
-      region              = var.region_name
-      hostname            = "${server_name}-${count.index}"
-      instance_template   = server_config.Instnace.name_prefix
-      deletion_protection = false
-      network             = "default"
+locals {
+  template_names = {
+    for idx, instance_config in var.vm : var.vm[idx].name_prefix => {
+      name = module.instance_template[idx].self_link
     }
   }
-
-  count = length(flatten([
-    for server_name, server_config in var.vm :
-    [for i in range(server_config.Instnace.count) : "${server_name}-${i + 1}"]
-  ]))
 }
+
+
+locals {
+  exploded_vm = merge([
+    for instance_name, instance_config in var.vm : {
+      for i in range(instance_config.count) : "${instance_name}-${i + 1}" => {
+        template_name = instance_name
+        # machine_name  = instance_name
+      }
+    }
+  ]...)
+}
+
+
+module "compute_instance" {
+  source              = "terraform-google-modules/vm/google//modules/compute_instance"
+  version             = "11.0.0"
+  for_each            = local.exploded_vm
+  region              = var.region_name
+  hostname            = each.key #each.value.machine_name 
+  instance_template   = tostring(local.template_names[var.vm[each.value.template_name].name_prefix].name)
+  deletion_protection = false
+  network             = "default"
+
+}
+# hostname            = each.key
+

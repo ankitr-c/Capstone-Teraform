@@ -1,7 +1,7 @@
-# output "output_string" {
-#   value = join("", ["http://", google_compute_instance.tf_demo.network_interface[0].access_config[0].nat_ip, ":5000"])
+# output "exploded_vm" {
+#   value = local.exploded_vm
 # }
 
-# output "instance_count" {
-#   value = google_compute_instance.tf_demo[count.index].count
+# output "template_names" {
+#   value = local.template_names
 # }
