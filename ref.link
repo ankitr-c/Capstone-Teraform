@@ -16,10 +16,7 @@ https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/c
 
 https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_region_instance_template
 
-dont know:
+unknown:
 
 https://www.googlecloudcommunity.com/gc/Infrastructure-Compute-Storage/Cannot-create-a-nested-Ubuntu-20-04-image-model-on-Google-Cloud/m-p/543696#M2943
 
-
----------------
-/var/lib/jenkins/secrets/

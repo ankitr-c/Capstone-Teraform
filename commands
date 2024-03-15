@@ -1,2 +1,3 @@
+for converting yaml config into a json file
 
 yq --prettyPrint config.yaml -o=json > terraform.tfvars.json
