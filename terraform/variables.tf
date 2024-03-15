@@ -1,33 +1,12 @@
+#--------------------Variable For Project ID--------------------------
 variable "project_id" {
   description = "this is the default project id"
 }
 
+#--------------------Variable For Region Name--------------------------
 variable "region_name" {
   description = "this is the default region"
 }
-
-
-# variable "vm" {
-#   description = "Map of VM configurations"
-#   type = map(object({
-#     name_prefix  = string
-#     tags         = list(string)
-#     source_image = string
-#     disk_size_gb = number
-#     machine_type = string
-#     labels       = map(string)
-#     count        = number
-#     default_zone = string
-#     email        = string
-#     additional_disks = optional(object({
-#       disk_name    = string
-#       device_name  = string
-#       disk_size_gb = number
-#       disk_type    = string
-#     }))
-#   }))
-# }
-
 
 variable "vm" {
   description = "Map of VM configurations"

@@ -1,7 +1,5 @@
-# output "exploded_vm" {
-#   value = local.exploded_vm
-# }
+#---------------------Server Count Output----------------------
 
-# output "template_names" {
-#   value = local.template_names
-# }
+output "template_names" {
+  value = local.server_count
+}
